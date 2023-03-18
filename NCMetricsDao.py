@@ -8,7 +8,7 @@ class NCMetricsDao:
         self.ncMetricsTable = ddbServiceResource.Table(NCMetricsDao.NC_METRICS_TABLE_NAME)
 
     def putOnlinePlayerCount(self, playerCountDataPoint):
-        self.ncMetricsTable.put_item(playerCountDataPoint)
+        self.ncMetricsTable.put_item(Item=playerCountDataPoint)
 
     def getOnlinePlayerCount(self, metricName, startTime, endTime):
         result = self.ncMetricsTable.query(KeyConditionExpression=Key(metricName).between(startTime, endTime))
