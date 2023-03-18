@@ -4,7 +4,7 @@ from NCMetricsDao import NCMetricsDao
 from DataPointUtil import DataPointUtil
 
 MC_STATUS_NC_URL = "https://api.mcsrvstat.us/2/mc.nostalgiacraft.fun"
-dynamoDBResource = boto3.resource('dynamodb')
+dynamoDBResource = boto3.resource('dynamodb',region_name="us-west-2")
 ncMetricsDao = NCMetricsDao(dynamoDBResource)
 
 
