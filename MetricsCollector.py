@@ -3,7 +3,7 @@ import boto3
 from NCMetricsDao import NCMetricsDao
 from DataPointUtil import DataPointUtil
 
-MC_STATUS_NC_URL = "https://api.mcsrvstat.us/2/mc.nostalgiacraft.fun"
+MC_STATUS_NC_URL = "https://api.mcstatus.io/v2/status/java/mc.nostalgiacraft.fun"
 dynamoDBResource = boto3.resource('dynamodb',region_name="us-west-2")
 ncMetricsDao = NCMetricsDao(dynamoDBResource)
 
