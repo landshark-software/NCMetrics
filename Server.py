@@ -12,7 +12,7 @@ limiter = Limiter(
     app=app,
     storage_uri="memory://",
 )
-dynamoDBResource = boto3.resource('dynamodb')
+dynamoDBResource = boto3.resource('dynamodb',region_name="us-west-2")
 ncMetricsDao = NCMetricsDao(dynamoDBResource)
 ncMetricsHandler = NCMetricsHandler(ncMetricsDao)
 
