@@ -19,7 +19,7 @@ ncMetricsHandler = NCMetricsHandler(ncMetricsDao)
 
 @app.route("/NCMetrics", methods=["GET"])
 @limiter.limit("20 per second", key_func=lambda: "NCMetrics")
-def slow():
+def getMetrics():
     metricName = request.args.get("metricName")
     startTime = int(request.args.get("startTime"))
     endTime = int(request.args.get("endTime"))
