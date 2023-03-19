@@ -12,7 +12,7 @@ limiter = Limiter(
     app=app,
     storage_uri="memory://",
 )
-dynamoDBResource = boto3.resource('dynamodb',region_name="us-west-2")
+dynamoDBResource = boto3.resource('dynamodb', region_name="us-west-2")
 ncMetricsDao = NCMetricsDao(dynamoDBResource)
 ncMetricsHandler = NCMetricsHandler(ncMetricsDao)
 
@@ -25,14 +25,21 @@ def getMetrics():
     endTime = int(request.args.get("endTime"))
 
     if not metricName or not startTime or not endTime:
-        return Response(response="metricName, startTime, endTime url parameters must be included",
+        return Response(response={"errorMessage":"metricName, startTime, endTime url parameters must be included",
+                                  "data": [],
+                                  "resultStartTime": 0,
+                                  "resultEndTime": 0},
                         status=HTTPStatus.BAD_REQUEST)
 
-    datapoints = ncMetricsHandler.handle({"metricName": metricName,
+    result = ncMetricsHandler.handle({"metricName": metricName,
                                           "startTime": startTime,
                                           "endTime": endTime})
+    datapoints = result["data"]
 
-    result = []
+    cleanedDataPoints = []
     for dataPoint in datapoints:
-        result.append({"playerCount": dataPoint["playerCount"], "time": dataPoint["time"]})
-    return result
+        cleanedDataPoints.append({"playerCount": dataPoint["playerCount"], "time": dataPoint["time"]})
+    return {"data": cleanedDataPoints,
+            "resultStartTime": result["resultStartTime"],
+            "resultEndTime": result["resultEndTime"],
+            "errorMessage": "None"}

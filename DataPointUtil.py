@@ -2,7 +2,7 @@ import time
 
 class DataPointUtil:
     DATA_RETENTION_PERIOD = 2592000  # 1 month in seconds
-
+    DATE_FORMAT = "%Y/%m/%d"
     @staticmethod
     def createPlayerCountDataPoint(playerCount):
         currentTime = DataPointUtil._getCurrentEpoch()
@@ -28,4 +28,4 @@ class DataPointUtil:
 
     @staticmethod
     def _getDate(t):
-        return time.strftime("%Y/%m/%d", t)
+        return time.strftime(DataPointUtil.DATE_FORMAT, t)
