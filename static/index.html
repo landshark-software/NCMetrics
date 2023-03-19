@@ -4,15 +4,17 @@
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </head>
 <body>
+<h1>Wraning this webate does not use HTTPS yet. Be careful with what you submit in the form</h1>
+	
 <div id="chartContainer" style="height: 370px; width:100%;"></div>
-<p>Start time: <input type="text" id="startTime" name="startTime"></p>
-<p>End time: <input type="text" id="endTime" name="endTime"></p>
+<p>Start time (epoch seconds): <input type="text" id="startTime" name="startTime"></p>
+<p>End time (epoch seconds): <input type="text" id="endTime" name="endTime"></p>
 <button onclick="getDataHandler('PlayerCount')">Get</button>
 
 </body>
 <script>
 apiUrl = "/NCMetrics"
-base = "https://ec2-35-85-42-95.us-west-2.compute.amazonaws.com:8484"
+base = "http://ec2-35-85-42-95.us-west-2.compute.amazonaws.com:8484"
 metricNameKey = "metricName"
 startTimeKey = "startTime"
 endTimeKey = "endTime"
