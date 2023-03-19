@@ -15,6 +15,8 @@ class NCMetricsDao:
                                            ReturnConsumedCapacity="TOTAL")
 
 
+        print("data points recieved")
+        print(result)
         return {
             "dataPoints": result["Items"],
             "cost": result["ConsumedCapacity"]["ReadCapacityUnits"] if result["ConsumedCapacity"] else 0,
