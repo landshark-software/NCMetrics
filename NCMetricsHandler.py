@@ -23,38 +23,41 @@ class NCMetricsHandler:
             requestEndTime = currentTime - NCMetricsHandler.TEN_MINUTES_IN_SECONDS
 
         resultStartTime = requestStartTime
-        resultEndTime = requestStartTime
+        resultEndTime = NCMetricsHandler.roundTimeDown(time.gmtime(requestStartTime))
 
         datapoints = []
-        days = (requestEndTime - requestStartTime)/NCMetricsHandler.ONE_DAY_IN_SECONDS
-
-        if math.floor(days) < days:
-            days = math.floor(days) + 1
-        else:
-            days = math.floor(days)
-
-        for day in range(days):
-            t = time.gmtime(requestStartTime + day * NCMetricsHandler.ONE_DAY_IN_SECONDS)
-            combinedName = DataPointUtil.buildMetricCombinedName(request["metricName"], t)
+        totalCost = 0
+        while resultEndTime < requestEndTime:
+            combinedName = DataPointUtil.buildMetricCombinedName(request["metricName"], time.gmtime(resultEndTime))
 
             try:
-                result = self.getDataPoints(combinedName, requestStartTime, requestEndTime)
+                totalCost += self.getDataPoints(combinedName, requestStartTime, requestEndTime, datapoints)
             except Exception as e:
                 print("Exception while getting data points")
                 print(e)
                 break
+            resultEndTime += NCMetricsHandler.ONE_DAY_IN_SECONDS
 
-            datapoints += result["dataPoints"]
-            if day == days - 1:
-                resultEndTime = requestEndTime
-            else:
-                resultEndTime = NCMetricsHandler.roundTimeDown(t) + NCMetricsHandler.ONE_DAY_IN_SECONDS
-
+        if resultEndTime > requestEndTime:
+            resultEndTime = requestEndTime
+        print("Total Cost of Request: ", totalCost)
         return {"data": datapoints, "resultStartTime": resultStartTime, "resultEndTime": resultEndTime}
 
-    def getDataPoints(self, combinedName, startTime, endTime):
-        return self.dao.getOnlinePlayerCount(combinedName, startTime, endTime)
+    def getDataPoints(self, combinedName, startTime, endTime, buffer):
+        cost = 0
+        # should be a do while loop, but that does not exist in python :(
+        result = self.dao.getOnlinePlayerCount(combinedName, startTime, endTime, {})
+        buffer += result["dataPoints"]
+        lastEvaluatedKey = result["lastEvaluatedKey"]
+        cost += result["cost"]
+        while lastEvaluatedKey is not None:
+            result = self.dao.getOnlinePlayerCount(combinedName, startTime, endTime, lastEvaluatedKey)
+            buffer += result["dataPoints"]
+            lastEvaluatedKey = result["lastEvaluatedKey"]
+            cost += result["cost"]
+        return cost
 
+    # round given time down to the nearest day in UTC
     @staticmethod
     def roundTimeDown(t):
         return time.mktime(time.strptime(time.strftime(DataPointUtil.DATE_FORMAT, t), DataPointUtil.DATE_FORMAT))

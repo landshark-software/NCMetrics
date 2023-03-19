@@ -10,11 +10,12 @@ class NCMetricsDao:
     def putOnlinePlayerCount(self, playerCountDataPoint):
         self.ncMetricsTable.put_item(Item=playerCountDataPoint)
 
-    def getOnlinePlayerCount(self, metricName, startTime, endTime):
+    def getOnlinePlayerCount(self, metricName, startTime, endTime, lek):
         print("------")
         print("calling getOnlinePlayerCount in dao", metricName, startTime, endTime)
         result = self.ncMetricsTable.query(KeyConditionExpression=Key("metricCombinedName").eq(metricName) & Key("time").between(startTime, endTime),
-                                           ReturnConsumedCapacity="TOTAL")
+                                           ReturnConsumedCapacity="TOTAL",
+                                           ExclusiveStartKey=lek)
         
         print(result)
         print("------")
