@@ -39,7 +39,9 @@ class NCMetricsHandler:
 
             try:
                 result = self.getDataPoints(combinedName, requestStartTime, requestEndTime)
-            except Exception:
+            except Exception as e:
+                print("Exception while getting data points")
+                print(e)
                 break
 
             datapoints += result["dataPoints"]
