@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width:100%;"></div>
+<p>Start time: <input type="text" id="startTime" name="startTime"></p>
+<p>End time: <input type="text" id="endTime" name="endTime"></p>
+<button onclick="getDataHandler('PlayerCount')">Get</button>
+
+</body>
+<script>
+apiUrl = "/NCMetrics"
+base = "http://127.0.0.1:5000"
+metricNameKey = "metricName"
+startTimeKey = "startTime"
+endTimeKey = "endTime"
+
+var dps = []; // dataPoints
+var chart = new CanvasJS.Chart("chartContainer", {
+	title :{
+		text: "NC Player Count"
+	},
+	data: [{
+		type: "line",
+		dataPoints: dps,
+		xValueType: "dateTime"
+	}]
+});
+
+chart.render()
+
+var xVal = 0;
+var yVal = 100;
+var updateInterval = 1000;
+var dataLength = 20; // number of dataPoints visible at any point
+
+function buildURL(metricName, startTime, endTime) {
+    url = new URL(apiUrl, base)
+    query = new URLSearchParams()
+    query.append(metricNameKey, metricName)
+    query.append(startTimeKey, startTime)
+    query.append(endTimeKey, endTime)
+
+    return url.toString() + "?" + query.toString()
+}
+
+async function makeRequest(url) {
+    request = new Request(url)
+    response = await fetch(request)
+    if(response.status === 200) {
+
+        updateChart(await response.json())
+    }
+    else {
+        console.log("error happened", response, response.text())
+    }
+}
+
+function updateChart(response) {
+    console.log(response)
+    dps.push(...response["data"].map(dp => {return {x: new Date(dp["time"]*1000), y: dp["playerCount"]}}))
+	chart.render();
+};
+
+async function getDataHandler(metricName) {
+    url = buildURL(metricName, document.getElementById("startTime").value, document.getElementById("endTime").value)
+    await makeRequest(url)
+}
+</script>
+</html>

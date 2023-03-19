@@ -25,6 +25,7 @@ def getMetrics():
     endTime = request.args.get("endTime")
 
     if not metricName or not startTime or not endTime:
+        print("invalid args", metricName, startTime, endTime)
         return Response(response={"errorMessage":"metricName, startTime, endTime url parameters must be included",
                                   "data": [],
                                   "resultStartTime": 0,
@@ -35,8 +36,8 @@ def getMetrics():
     endTime = int(endTime)
     
     result = ncMetricsHandler.handle({"metricName": metricName,
-                                          "startTime": startTime,
-                                          "endTime": endTime})
+                                      "startTime": startTime,
+                                      "endTime": endTime})
     datapoints = result["data"]
 
     cleanedDataPoints = []
