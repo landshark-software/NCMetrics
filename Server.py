@@ -21,8 +21,8 @@ ncMetricsHandler = NCMetricsHandler(ncMetricsDao)
 @limiter.limit("20 per second", key_func=lambda: "NCMetrics")
 def getMetrics():
     metricName = request.args.get("metricName")
-    startTime = int(request.args.get("startTime"))
-    endTime = int(request.args.get("endTime"))
+    startTime = request.args.get("startTime")
+    endTime = request.args.get("endTime")
 
     if not metricName or not startTime or not endTime:
         return Response(response={"errorMessage":"metricName, startTime, endTime url parameters must be included",
@@ -31,6 +31,9 @@ def getMetrics():
                                   "resultEndTime": 0},
                         status=HTTPStatus.BAD_REQUEST)
 
+    startTime = int(startTime)
+    endTime = int(endTime)
+    
     result = ncMetricsHandler.handle({"metricName": metricName,
                                           "startTime": startTime,
                                           "endTime": endTime})
