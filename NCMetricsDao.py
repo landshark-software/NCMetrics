@@ -11,7 +11,7 @@ class NCMetricsDao:
         self.ncMetricsTable.put_item(Item=playerCountDataPoint)
 
     def getOnlinePlayerCount(self, metricName, startTime, endTime):
-        result = self.ncMetricsTable.query(KeyConditionExpression=Key(metricName).between(startTime, endTime),
+        result = self.ncMetricsTable.query(KeyConditionExpression=Key("metricCombinedName").eq(metricName) & Key("time").between(startTime, endTime),
                                            ReturnConsumedCapacity="TOTAL")
 
 
