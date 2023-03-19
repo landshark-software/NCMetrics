@@ -16,9 +16,9 @@ class NCMetricsDao:
         cost = 0
         lastEvaluatedKey = None
         
-        if result["ConsumedCapacity"] != None and result["ConsumedCapacity"]["CapacityUnits"] != None:
+        if "ConsumedCapacity" in result and "CapacityUnits" in result["ConsumedCapacity"]:
             cost = result["ConsumedCapacity"]["CapacityUnits"]
-        if result["LastEvaluatedKey"] != None and result["LastEvaluatedKey"]["string"] != None:
+        if "LastEvaluatedKey" in result and "string" in result["LastEvaluatedKey"]:
             lastEvaluatedKey = result["LastEvaluatedKey"]["string"]
         
         return {
