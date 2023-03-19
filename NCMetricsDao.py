@@ -13,12 +13,16 @@ class NCMetricsDao:
     def getOnlinePlayerCount(self, metricName, startTime, endTime):
         result = self.ncMetricsTable.query(KeyConditionExpression=Key("metricCombinedName").eq(metricName) & Key("time").between(startTime, endTime),
                                            ReturnConsumedCapacity="TOTAL")
-
-
-        print("data points recieved")
-        print(result)
+        cost = 0
+        lastEvaluatedKey = None
+        
+        if result["ConsumedCapacity"] != None and result["ConsumedCapacity"]["CapacityUnits"] != None:
+            cost = result["ConsumedCapacity"]["CapacityUnits"]
+        if result["LastEvaluatedKey"] != None and result["LastEvaluatedKey"]["string"] != None:
+            lastEvaluatedKey = result["LastEvaluatedKey"]["string"]
+        
         return {
             "dataPoints": result["Items"],
-            "cost": result["ConsumedCapacity"]["ReadCapacityUnits"] if result["ConsumedCapacity"] else 0,
-            "lastEvaluatedKey": result["LastEvaluatedKey"]["string"] if result["LastEvaluatedKey"] else None,
+            "cost": cost,
+            "lastEvaluatedKey": lastEvaluatedKey
         }
