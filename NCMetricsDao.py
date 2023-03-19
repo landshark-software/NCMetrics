@@ -13,9 +13,14 @@ class NCMetricsDao:
     def getOnlinePlayerCount(self, metricName, startTime, endTime, lek):
         print("------")
         print("calling getOnlinePlayerCount in dao", metricName, startTime, endTime)
-        result = self.ncMetricsTable.query(KeyConditionExpression=Key("metricCombinedName").eq(metricName) & Key("time").between(startTime, endTime),
-                                           ReturnConsumedCapacity="TOTAL",
-                                           ExclusiveStartKey=lek)
+        
+        if lek is None:
+            result = self.ncMetricsTable.query(KeyConditionExpression=Key("metricCombinedName").eq(metricName) & Key("time").between(startTime, endTime),
+                                           ReturnConsumedCapacity="TOTAL")
+        else:
+            result = self.ncMetricsTable.query(KeyConditionExpression=Key("metricCombinedName").eq(metricName) & Key("time").between(startTime, endTime),
+                                               ReturnConsumedCapacity="TOTAL",
+                                               ExclusiveStartKey=lek)
         
         print(result)
         print("------")
