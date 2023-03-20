@@ -62,7 +62,8 @@ async function makeRequest(url) {
 
 function updateChart(response) {
     console.log(response);
-    dps = response["data"].map(dp => {return {x: new Date(dp["time"]*1000), y:convertToNumber(dp["playerCount"])}});
+    datapoints = response["data"].map(dp => {return {x: new Date(dp["time"]*1000), y:convertToNumber(dp["playerCount"])}});
+    dps.splice(0, dps.length, datapoints);
 	chart.render();
 };
 
