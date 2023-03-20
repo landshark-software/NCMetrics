@@ -73,7 +73,7 @@ function convertToNumber(str) {
 }
 
 async function getDataHandler(metricName) {
-    startTime = new Date(document.getElementById("date").value)
+    startTime = new Date(document.getElementById("date").value+"T00:00")
     startTime = startTime.getTime()/1000
     url = buildURL(metricName, startTime, startTime + 24*60*60)
     await makeRequest(url)
