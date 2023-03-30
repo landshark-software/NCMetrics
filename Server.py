@@ -5,8 +5,19 @@ import time
 import boto3
 from NCMetricsDao import NCMetricsDao
 from NCMetricsHandler import NCMetricsHandler
+from werkzeug.middleware.proxy_fix import ProxyFix
+import os
+
+X_FOR_HEADERS = int(os.environ['X_FOR_HEADERS'])
+X_PROTO_HEADERS = int(os.environ['X_PROTO_HEADERS'])
+X_HOST_HEADERS = int(os.environ['X_HOST_HEADERS'])
+X_PREFIX_HEADERS = int(os.environ['X_PREFIX_HEADERS'])
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=X_FOR_HEADERS, x_proto=X_PROTO_HEADERS, x_host=X_HOST_HEADERS, x_prefix=X_PREFIX_HEADERS
+)
+
 limiter = Limiter(
     lambda: "Server",
     app=app,
@@ -47,3 +58,7 @@ def getMetrics():
             "resultStartTime": result["resultStartTime"],
             "resultEndTime": result["resultEndTime"],
             "errorMessage": "None"}
+
+
+ProxyFix
+
