@@ -1,7 +1,7 @@
 import time
 
 class DataPointUtil:
-    DATA_RETENTION_PERIOD = 2592000  # 1 month in seconds
+    DATA_RETENTION_PERIOD = 365 * 24 * 60 * 60  # 1 year in seconds
     DATE_FORMAT = "%Y/%m/%d"
     @staticmethod
     def createPlayerCountDataPoint(playerCount):
