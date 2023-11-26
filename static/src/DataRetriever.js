@@ -76,14 +76,14 @@ function convertToNumber(str) {
 }
 
 async function getDataHandler(metricName) {
-
     startTime = new Date(document.getElementById("date").value+"T00:00");
+    startEpoch = startTime.getTime()/1000,
     config = {
         date: document.getElementById("date").value,
         metricName: metricName,
-        startTime: startTime.getTime()/1000,
-        endTime: startTime + 24*60*60
+        startEpoch: startEpoch
+        endEpoch: startEpoch + 24*60*60
     }
-    url = buildURL(metricName, config.startTime, config.endTime);
+    url = buildURL(metricName, config.startEpoch, config.endEpoch);
     await makeRequest(url, config);
 }
