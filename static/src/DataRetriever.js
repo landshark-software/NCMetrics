@@ -1,8 +1,8 @@
-apiUrl = "/NCMetrics";
-base = "https://landshark.name";
-metricNameKey = "metricName";
-startTimeKey = "startTime";
-endTimeKey = "endTime";
+const apiUrl = "/NCMetrics";
+const base = "https://landshark.name";
+const metricNameKey = "metricName";
+const startTimeKey = "startTime";
+const endTimeKey = "endTime";
 
 const ctx = document.getElementById('metrics');
 const chart = new Chart(ctx, {
@@ -32,6 +32,8 @@ const chart = new Chart(ctx, {
             }
         }
     });
+
+document.getElementById("getDataBtn").addEventListener ("click", (event) => {getDataHandler('PlayerCount');}, false);
 
 function buildURL(metricName, startTime, endTime) {
     url = new URL(apiUrl, base);
