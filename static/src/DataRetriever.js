@@ -33,7 +33,7 @@ const chart = new Chart(ctx, {
         }
     });
 
-document.getElementById("getDataBtn").addEventListener ("click", (event) => {getDataHandler('PlayerCount');}, false);
+
 
 function buildURL(metricName, startTime, endTime) {
     url = new URL(apiUrl, base);
@@ -89,3 +89,6 @@ async function getDataHandler(metricName) {
     url = buildURL(metricName, config.startEpoch, config.endEpoch);
     await makeRequest(url, config);
 }
+
+
+document.getElementById("getDataBtn").addEventListener ("click", (event) => {getDataHandler('PlayerCount');}, false);
