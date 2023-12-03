@@ -83,7 +83,7 @@ async function getDataHandler(metricName) {
     config = {
         date: document.getElementById("date").value,
         metricName: metricName,
-        startEpoch: startEpoch
+        startEpoch: startEpoch,
         endEpoch: startEpoch + 24*60*60
     }
     url = buildURL(metricName, config.startEpoch, config.endEpoch);
