@@ -52,7 +52,6 @@ def getMetrics():
     datapoints = result["data"]
 
     cleanedDataPoints = []
-    print(datapoints)
     for dataPoint in datapoints:
         cleanedDataPoints.append({"value": dataPoint["playerCount"] if "playerCount" in dataPoint else dataPoint["value"], "time": dataPoint["time"]})
     return {"data": cleanedDataPoints,

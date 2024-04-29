@@ -2,6 +2,7 @@ from mcstatus import JavaServer
 import boto3
 from NCMetricsDao import NCMetricsDao
 from DataPointUtil import DataPointUtil
+from decimal import Decimal
 
 NC_URL = "mc.NostalgiaCraft.fun:25565"
 dynamoDBResource = boto3.resource('dynamodb',region_name="us-west-2")
@@ -14,13 +15,12 @@ def main():
     except Exception as e:
         # put availability 0 metric here
         raise e
-    print("Players online: ", status.players.online, " Latency: ", status.latency)
 
     playerCountDataPoint = DataPointUtil.createDataPoint("PlayerCount", status.players.online)
-    ncMetricsDao.putDataPoint(playerCountDataPoint)
+    ncMetricsDao.putData(playerCountDataPoint)
 
-    latencyDataPoint = DataPointUtil.createDataPoint("NCPingLatency", status.latency)
-    ncMetricsDao.putDataPoint(latencyDataPoint)
+    latencyDataPoint = DataPointUtil.createDataPoint("NCPingLatency", int(status.latency))
+    ncMetricsDao.putData(latencyDataPoint)
 
 if __name__ == '__main__':
     main()
