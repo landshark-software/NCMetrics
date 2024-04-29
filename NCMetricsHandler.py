@@ -46,12 +46,12 @@ class NCMetricsHandler:
     def getDataPoints(self, combinedName, startTime, endTime, buffer):
         cost = 0
         # should be a do while loop, but that does not exist in python :(
-        result = self.dao.getOnlinePlayerCount(combinedName, startTime, endTime, None)
+        result = self.dao.getData(combinedName, startTime, endTime, None)
         buffer += result["dataPoints"]
         lastEvaluatedKey = result["lastEvaluatedKey"]
         cost += result["cost"]
         while lastEvaluatedKey is not None:
-            result = self.dao.getOnlinePlayerCount(combinedName, startTime, endTime, lastEvaluatedKey)
+            result = self.dao.getData(combinedName, startTime, endTime, lastEvaluatedKey)
             buffer += result["dataPoints"]
             lastEvaluatedKey = result["lastEvaluatedKey"]
             cost += result["cost"]

@@ -1,5 +1,4 @@
 const apiUrl = "/NCMetrics";
-const base = "https://landshark.name";
 const metricNameKey = "metricName";
 const startTimeKey = "startTime";
 const endTimeKey = "endTime";
@@ -36,13 +35,12 @@ const chart = new Chart(ctx, {
 
 
 function buildURL(metricName, startTime, endTime) {
-    url = new URL(apiUrl, base);
     query = new URLSearchParams();
     query.append(metricNameKey, metricName);
     query.append(startTimeKey, startTime);
     query.append(endTimeKey, endTime);
 
-    return url.toString() + "?" + query.toString();
+    return apiUrl + "?" + query.toString();
 }
 
 async function makeRequest(url, config) {
@@ -62,7 +60,7 @@ async function makeRequest(url, config) {
 }
 
 function updateChart(response, config) {
-    datapoints = response["data"].map(dp => {return {x: new Date(dp["time"]*1000), y:convertToNumber(dp["playerCount"])}});
+    datapoints = response["data"].map(dp => {return {x: new Date(dp["time"]*1000), y:convertToNumber(dp["value"])}});
     dataConfig = {
         label: config.date,
         data: datapoints
@@ -78,6 +76,12 @@ function convertToNumber(str) {
 }
 
 async function getDataHandler(metricName) {
+    urlParams = new URLSearchParams(window.location.search);
+    metricNameOverride = urlParams.get('metricNameOverride');
+    if(metricNameOverride !== null){
+        metricName = metricNameOverride
+    }
+
     startTime = new Date(document.getElementById("date").value+"T00:00");
     startEpoch = startTime.getTime()/1000,
     config = {

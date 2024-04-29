@@ -13,7 +13,7 @@ pip install Flask
 pip install Flask-Limiter
 pip install requests
 pip install boto3
-
+pip install mcstatus
 
 mkdir ~/ssl
 openssl req -x509 -newkey rsa:4096 -keyout ~/ssl/key.pem -out ~/ssl/cert.pem -sha256 -days 3650 -nodes -subj '/CN=localhost'
@@ -31,3 +31,5 @@ export X_PREFIX_HEADERS=1
 
 nohup gunicorn -w 2 --certfile=../ssl/cert.pem --keyfile=../ssl/key.pem -b 127.0.0.1:8000 'Server:app' &
 export SERVER_PID=$!
+
+echo "*/5 * * * * python3 /home/ubuntu/NCMetrics/MetricsCollector.py" | crontab

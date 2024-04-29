@@ -1,20 +1,26 @@
-import requests
+from mcstatus import JavaServer
 import boto3
 from NCMetricsDao import NCMetricsDao
 from DataPointUtil import DataPointUtil
 
-MC_STATUS_NC_URL = "https://api.mcstatus.io/v2/status/java/mc.nostalgiacraft.fun"
+NC_URL = "mc.NostalgiaCraft.fun:25565"
 dynamoDBResource = boto3.resource('dynamodb',region_name="us-west-2")
 ncMetricsDao = NCMetricsDao(dynamoDBResource)
-
+server = JavaServer.lookup(NC_URL)
 
 def main():
-    response = requests.get(MC_STATUS_NC_URL).json()
-    if response["online"]:
-        print("Players online: ", response["players"]["online"])
-        playerCountDataPoint = DataPointUtil.createPlayerCountDataPoint(response["players"]["online"])
-        ncMetricsDao.putOnlinePlayerCount(playerCountDataPoint)
+    try:
+        status = server.status()
+    except Exception as e:
+        # put availability 0 metric here
+        raise e
+    print("Players online: ", status.players.online, " Latency: ", status.latency)
 
+    playerCountDataPoint = DataPointUtil.createDataPoint("PlayerCount", status.players.online)
+    ncMetricsDao.putDataPoint(playerCountDataPoint)
+
+    latencyDataPoint = DataPointUtil.createDataPoint("NCPingLatency", status.latency)
+    ncMetricsDao.putDataPoint(latencyDataPoint)
 
 if __name__ == '__main__':
     main()

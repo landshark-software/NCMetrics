@@ -45,15 +45,16 @@ def getMetrics():
 
     startTime = int(startTime)
     endTime = int(endTime)
-    
+
     result = ncMetricsHandler.handle({"metricName": metricName,
                                       "startTime": startTime,
                                       "endTime": endTime})
     datapoints = result["data"]
 
     cleanedDataPoints = []
+    print(datapoints)
     for dataPoint in datapoints:
-        cleanedDataPoints.append({"playerCount": dataPoint["playerCount"], "time": dataPoint["time"]})
+        cleanedDataPoints.append({"value": dataPoint["playerCount"] if "playerCount" in dataPoint else dataPoint["value"], "time": dataPoint["time"]})
     return {"data": cleanedDataPoints,
             "resultStartTime": result["resultStartTime"],
             "resultEndTime": result["resultEndTime"],
