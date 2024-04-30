@@ -2,7 +2,7 @@ from boto3.dynamodb.conditions import Key
 
 
 class NCMetricsDao:
-    NC_METRICS_TABLE_NAME = "NCMetricsDev"
+    NC_METRICS_TABLE_NAME = "NCMetricsStore"
 
     def __init__(self, ddbServiceResource):
         self.ncMetricsTable = ddbServiceResource.Table(NCMetricsDao.NC_METRICS_TABLE_NAME)
